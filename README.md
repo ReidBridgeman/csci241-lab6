@@ -20,6 +20,7 @@ Write a static function public boolean isFull(TreeNode t) that returns true if t
  
 
 The example below shows a full tree.
+
 ![q1](images/q1.png)
 
  
