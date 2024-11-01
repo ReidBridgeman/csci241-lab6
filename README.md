@@ -20,13 +20,13 @@ Write a static function public boolean isFull(TreeNode t) that returns true if t
  
 
 The example below shows a full tree.
-![q1 image](images/q1.png)
+![q1](images/q1.png)
 
  
 
 The example below shows a tree that is not full.
 
-image.png
+![q2](images/q2.png)
 Complete Tree
 
 Write a static function public boolean isComplete(TreeNode t) that returns true if t is a complete tree.  A complete binary tree is one where the nodes at all levels are completely filled, except for the last level, which might not be completely filled. At the last level, the nodes are filled from the left.
@@ -35,7 +35,7 @@ Write a static function public boolean isComplete(TreeNode t) that returns true 
 
 The example below shows a complete tree.
 
-image.png
+![q3](images/q3.png)
 
  
 
