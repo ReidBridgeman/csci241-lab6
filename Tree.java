@@ -1,3 +1,10 @@
+/*
+Reid Bridgeman
+csci241, wwu Fall 24'25, Dr. Tan
+Lab 6: Tree Cardio
+Due Nov 5th
+*/
+
 public class Tree{
     public int value;
     Tree left;
@@ -92,20 +99,28 @@ public class Tree{
     public static int height(Tree t){
         if(t == null){
             return 0;
-        } else {
-            int hl = height(t.left);
-            int hr = height(t.right);
-            if (hl > hr) {
-                return hl + 1;
-            } else {
-                return hr +1;
-            }
-        }
+        } 
+        // else {
+        //     int hl = height(t.left);
+        //     int hr = height(t.right);
+        //     if (hl > hr) {
+        //         return hl + 1;
+        //     } else {
+        //         return hr +1;
+        //     }
+        // }
+        return Math.max(height(t.left), height(t.right)) + 1;
     }
     // retrun max(height(t.left), height(t.right))  + 1;
 
     public static boolean isFull(Tree t){
-        // base cases
+    // BASE CASES
+        if(t == null){
+            return true;
+        }
+        if(height(t.left) != height(t.right)){      //different heights for left and right is not a full tree.
+            return false;
+        }
         //node has no children.
         if((t.left == null) && (t.right == null)){
             return true;
@@ -116,60 +131,62 @@ public class Tree{
             //System.out.println("one child missing.");
             return false;
         }
-
-        //if ((t.left != null) && (t.right != null)) {  //node has two children
-        System.out.println("might be full...");
+        
+        // node has two children, so recurse to check if left and right
         boolean isleftFull = isFull(t.left);
         boolean isrightFull = isFull(t.right);
         return isleftFull && isrightFull;
     }
+
     /**
-    * subtrees +- 1 difference in height
-    * cant have a node with only a right children
-    * get left child height, get right child height
-    *
-    */
-    // Boris's assistance
-    // public static boolean isComplete(Tree t){
-    //     int h = height(t);
-    //     boolean isc = countFull(t, h-1);
-    //
-    //     // check breadth of level height
-    // }
-    // // lltc = levelslefttocheck
-    // public static boolean countFull (Tree t, int levelsLeftToCheck){
-    //     if (isFull(t)){
-    //         countFull(t, levelsLeftToCheck-1);
-    //     }
-    //     return isFull(t);
-    // }
-
+     * true when tree height -1 is a full tree and all children in tree height fill from left to right.
+     * a null tree is also a complete tree (for the recursion to work) 
+     */
     public static boolean isComplete(Tree t){
-        return false;
+    // BASE CASES
+        if(t == null){                      // define null tree as complete
+            //System.out.println("null node");
+            return true;
+        }
+        // only a right child, therefor not complete
+        if((t.left == null) && (t.right != null)){
+            return false;
+        }
+        // get left and right child's height
+        int lh = height(t.left);
+        int rh = height(t.right);
+
+        // comparing left and right heights
+                    // height(t.right) cannot be greater than height(t.left) --> (lh - rh) < 0 
+                    // left height can be at most 1 greater than right height --> (lh - rh) > 1
+        if(((lh-rh) < 0) || ((lh-rh) > 1)){
+            return false;
+        }
+    // RECURSION STEP
+        // recursively call isComplete on t.left and t.right
+        //System.out.println("recurse check");
+        boolean lef =  isComplete(t.left);
+        boolean rig = isComplete(t.right);
+        return lef && rig;                  //left tree and right tree are complete.
     }
-
-    public static int levelCounter(Tree t){
-        int level = height(t);
-        return -1;
-
-    }
-
-
 
     public static void main(String[] args){
         Tree trivia = null;
-        //System.out.println(trivia.value);
+        System.out.println("height(trivia) = " + height(trivia));
+        System.out.println("isFull(trivia): "+isFull(trivia)); // true
         //  4
         //  /\
         // 3  5
         //   / \
         //  4   30
         Tree t3 = new Tree(4, null, null);
+        System.out.println("isComplete(t3): " + isComplete(t3)); //true -> checking if tree with one entry is complete
         t3.add(5);
         t3.add(3);
-        // t3.add(4);
-        // t3.add(30);
-        System.out.println("isFull(t3): "+isFull(t3));
+        System.out.println("isFull(t3): "+isFull(t3)); // true
+        t3.add(4);
+        t3.add(30);
+        System.out.println("isFull(t3): "+isFull(t3)); // false
 
         // tree
         //          10
@@ -182,15 +199,16 @@ public class Tree{
         tree.add(2);
         tree.add(3);
         tree.add(1);
-        //tree.add(12);
-        System.out.println("isIdentical(t3, t3): " + isIdentical(t3, t3));
-        System.out.println("tree height = " + height(tree.left));
+        tree.add(12);
+        //tree.add(13);
+        // System.out.println("isIdentical(t3, t3): " + isIdentical(t3, t3));
+        System.out.println("height(tree) = " + height(tree));
         System.out.println("isFull(tree): "+isFull(tree));
 
         // t2
         //             15
-        //            /
-        //           10
+        //            /  \
+        //           10   20
         //          / \
         //         2  12
         //        / \
@@ -198,21 +216,26 @@ public class Tree{
         // t2 has tree as a subtree
         Tree t2 = new Tree(15, null, null);
         t2.add(10);
+        t2.add(20);
         t2.add(2);
         t2.add(3);
         t2.add(1);
         t2.add(12);
-        System.out.println("\nt2 height = " + height(t2));
-        System.out.println("isSubtree(t2, trivia): " + isSubtree(t2, trivia));
+        // System.out.println("\nt2 height = " + height(t2));
+        // System.out.println("isSubtree(t2, trivia): " + isSubtree(t2, trivia));
+        System.out.println("isFull(t2): " + isFull(t2));
         System.out.println("isSubTree(t2, tree): " + isSubtree(t2, tree));
         System.out.println("isSubTree(t2, t3): " + isSubtree(t2, t3));
 
         // checking t3.right returns null if node has no value.
-        if (t3.right.right != null){
-            System.out.println("t3.right.right.value: " + t3.right.right.value);
-        } else{
-            System.out.println("t3.right.right: " + t3.right.right);
-        }
+        // if (t3.right.right != null){
+        //     System.out.println("t3.right.right.value: " + t3.right.right.value);
+        // } else{
+        //     System.out.println("t3.right.right: " + t3.right.right);
+        // }
+
+
+        System.out.println("isComplete(t3): " + isComplete(tree));
 
     }
 }
